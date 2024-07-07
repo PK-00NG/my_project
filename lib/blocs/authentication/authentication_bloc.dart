@@ -26,4 +26,10 @@ class AuthenticationBloc
       }
     });
   }
+
+  @override
+  Future<void> close() {
+    _userSubscription.cancel();
+    return super.close();
+  }
 }
