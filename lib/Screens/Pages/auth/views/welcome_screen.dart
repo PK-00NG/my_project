@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:my_project/Screens/Pages/auth/views/sign_in_screen.dart';
 import 'package:user_repository/user_repository.dart';
 import '../../../../blocs/authentication/authentication_bloc.dart';
 import '../blocs/sign_in/sign_in_bloc.dart';
