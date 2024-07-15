@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:my_project/Screens/Pages/auth/blocs/sign_in/sign_in_bloc.dart';
-import 'package:my_project/Screens/Pages/auth/components/my_text_field.dart';
+import 'package:my_project/components/my_text_field.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -102,7 +102,7 @@ class _SignInScreenState extends State<SignInScreen> {
                               borderRadius: BorderRadius.circular(60))),
                       child: const Padding(
                         padding:
-                            EdgeInsets.symmetric(horizontal: 25, vertical: 25),
+                            EdgeInsets.symmetric(horizontal: 25, vertical: 10),
                         child: Text(
                           'Sign In',
                           textAlign: TextAlign.center,

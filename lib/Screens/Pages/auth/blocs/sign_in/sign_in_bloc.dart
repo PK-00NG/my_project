@@ -1,6 +1,5 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:my_project/blocs/authentication/authentication_bloc.dart';
 import 'package:user_repository/user_repository.dart';
 
 part 'sign_in_event.dart';
@@ -9,9 +8,7 @@ part 'sign_in_state.dart';
 class SignInBloc extends Bloc<SignInEvent, SignInState> {
   final UserRepository _userRepository;
 
-  SignInBloc(this._userRepository,
-      {required AuthenticationBloc Function() userRepository})
-      : super(SignInInitial()) {
+  SignInBloc(this._userRepository) : super(SignInInitial()) {
     on<SignInRequired>((event, emit) async {
       emit(SignInLoading());
       try {
@@ -20,7 +17,6 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
         emit(SignInFailure());
       }
     });
-
     on<SignOutRequired>((event, emit) async => await _userRepository.logOut());
   }
 }
