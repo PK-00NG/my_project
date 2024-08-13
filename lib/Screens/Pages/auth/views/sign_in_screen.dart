@@ -105,10 +105,8 @@ class _SignInScreenState extends State<SignInScreen> {
                       child: TextButton(
                         onPressed: () {
                           if (_fromKey.currentState!.validate()) {
-                            /* context.read<SignInBloc>().add(SignInRequired(
-                        emailController.text, 
-                        passwordController.text)
-                      ); */
+                            context.read<SignInBloc>().add(SignInRequired(
+                                emailController.text, passwordController.text));
                           }
                         },
                         style: TextButton.styleFrom(

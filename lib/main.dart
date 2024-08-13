@@ -13,18 +13,3 @@ void main() async {
   Bloc.observer = SimpleBlocObserver();
   runApp(MyApp(FirebaseUserRepo()));
 }
-
-/* class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Cattle Weight',
-        theme: ThemeData(
-            scaffoldBackgroundColor: Colors.lightBlue,
-            appBarTheme: AppBarTheme(backgroundColor: Colors.amber)),
-        home: HomePage());
-  }
-} */
