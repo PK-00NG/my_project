@@ -91,7 +91,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       });
                     }
                     if (val.contains(RegExp(
-                        r'^(?=.*?[!@#\$&*~`)\%\-(_=+;:,.<>/?"[{\}]\[^])'))) {
+                        r'^(?=.*?[!@#$&*~`)\%\-(_+=;:,.<>/?"[{\]}\|^])'))) {
                       setState(() {
                         containsSpecialChar = true;
                       });
@@ -128,7 +128,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     if (val!.isEmpty) {
                       return 'Please fill in this field';
                     } else if (!RegExp(
-                            r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~`)\%\-(_=+;:,.<>/?"[{\}]\[^]).{8,}$')
+                            r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$&*~`)\%\-(_+=;:,.<>/?"[{\]}\|^]).{8,}$')
                         .hasMatch(val)) {
                       return 'Please enter a valid password';
                     }
