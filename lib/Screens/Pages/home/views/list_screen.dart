@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:my_project/Screens/Pages/auth/blocs/sign_in/sign_in_bloc.dart';
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+class ListScreen extends StatelessWidget {
+  const ListScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -11,7 +13,9 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.background,
         leading: IconButton(
-          onPressed: () {},
+          onPressed: () {
+            context.read<SignInBloc>().add(SignOutRequired());
+          },
           icon: Icon(CupertinoIcons.arrow_left_to_line),
         ),
         centerTitle: true,

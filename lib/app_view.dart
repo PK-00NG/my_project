@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:my_project/blocs/authentication/authentication_bloc.dart';
 
+import 'Screens/Pages/auth/blocs/sign_in/sign_in_bloc.dart';
 import 'Screens/Pages/auth/views/welcome_screen.dart';
 import 'Screens/Pages/home/views/list_screen.dart';
 
@@ -22,7 +24,11 @@ class MyAppView extends StatelessWidget {
         home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
           builder: ((context, state) {
             if (state.status == AuthenticationStatus.authenticated) {
-              return const ListScreen();
+              return BlocProvider(
+                create: (context) => SignInBloc(
+                    context.read<AuthenticationBloc>().userRepository),
+                child: const ListScreen(),
+              );
             } else {
               return const WelcomeScreen();
             }
