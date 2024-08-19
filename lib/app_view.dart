@@ -15,7 +15,7 @@ class MyAppView extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
             colorScheme: ColorScheme.light(
-                background: Colors.grey.shade100,
+                background: Colors.grey.shade200,
                 onBackground: Colors.black,
                 primary: Colors.lightBlue,
                 onPrimary: Colors.white)),

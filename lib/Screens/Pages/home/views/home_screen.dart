@@ -6,7 +6,18 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.lightBlue,
+      backgroundColor: Theme.of(context).colorScheme.background,
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.background,
+        title: Row(
+          children: [
+            Text(
+              'CATTLE LIST',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
+            )
+          ],
+        ),
+      ),
     );
   }
 }
