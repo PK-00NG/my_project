@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -9,13 +10,14 @@ class HomeScreen extends StatelessWidget {
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.background,
-        title: Row(
-          children: [
-            Text(
-              'CATTLE LIST',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
-            )
-          ],
+        leading: IconButton(
+          onPressed: () {},
+          icon: Icon(CupertinoIcons.arrow_left_to_line),
+        ),
+        centerTitle: true,
+        title: const Text(
+          'CATTLE LIST',
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
         ),
       ),
     );
