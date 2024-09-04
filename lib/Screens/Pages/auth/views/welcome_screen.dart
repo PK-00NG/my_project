@@ -36,27 +36,27 @@ class _WelcomeScreenState extends State<WelcomeScreen>
           child: Stack(
             children: [
               Align(
-                alignment: const AlignmentDirectional(20, -1.2),
+                alignment: const AlignmentDirectional(20, -1.6),
                 child: Container(
                   height: MediaQuery.of(context).size.width,
                   width: MediaQuery.of(context).size.width,
-                  decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Theme.of(context).colorScheme.tertiary),
-                ),
-              ),
-              Align(
-                alignment: const AlignmentDirectional(-2.7, -1.2),
-                child: Container(
-                  height: MediaQuery.of(context).size.width / 1.3,
-                  width: MediaQuery.of(context).size.width / 1.3,
                   decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: Theme.of(context).colorScheme.secondary),
                 ),
               ),
               Align(
-                alignment: const AlignmentDirectional(2.7, -1.2),
+                alignment: const AlignmentDirectional(-2.7, -1.6),
+                child: Container(
+                  height: MediaQuery.of(context).size.width / 1.3,
+                  width: MediaQuery.of(context).size.width / 1.3,
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Theme.of(context).colorScheme.primary),
+                ),
+              ),
+              Align(
+                alignment: const AlignmentDirectional(2.7, -1.6),
                 child: Container(
                   height: MediaQuery.of(context).size.width / 1.3,
                   width: MediaQuery.of(context).size.width / 1.3,
@@ -70,7 +70,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                 child: Container(),
               ),
               Align(
-                alignment: Alignment.center,
+                alignment: AlignmentDirectional(20, 1.0),
                 child: SizedBox(
                   height: MediaQuery.of(context).size.height / 1.8,
                   child: Column(
