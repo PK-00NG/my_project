@@ -5,7 +5,7 @@ import 'package:my_project/blocs/authentication/authentication_bloc.dart';
 
 import 'Screens/Pages/auth/blocs/sign_in/sign_in_bloc.dart';
 import 'Screens/Pages/auth/views/welcome_screen.dart';
-import 'Screens/Pages/home/views/list_screen.dart';
+import 'Screens/Pages/home/views/home_screen.dart';
 
 class MyAppView extends StatelessWidget {
   const MyAppView({super.key});
@@ -28,7 +28,7 @@ class MyAppView extends StatelessWidget {
               return BlocProvider(
                 create: (context) => SignInBloc(
                     context.read<AuthenticationBloc>().userRepository),
-                child: const ListScreen(),
+                child: const HomeScreen(),
               );
             } else {
               return const WelcomeScreen();
