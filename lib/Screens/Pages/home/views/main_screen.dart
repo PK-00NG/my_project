@@ -95,7 +95,7 @@ class _MainScreenState extends State<MainScreen> {
           items: const [
             BottomNavigationBarItem(icon: Icon(Icons.home), label: 'หน้าหลัก'),
             BottomNavigationBarItem(
-                icon: Icon(Icons.add), label: 'เพิ่มโปรไฟล์'),
+                icon: Icon(Icons.article), label: 'เพิ่มโปรไฟล์'),
             BottomNavigationBarItem(icon: Icon(Icons.menu), label: 'เมนู'),
           ],
           backgroundColor: Colors.white,
