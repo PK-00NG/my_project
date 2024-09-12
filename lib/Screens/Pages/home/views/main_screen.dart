@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'home_screen.dart';
 import 'add_profile_screen.dart';
+import 'menu_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -16,6 +17,7 @@ class _MainScreenState extends State<MainScreen> {
   final List<Widget> _screens = [
     HomeScreen(),
     AddProfileScreen(),
+    MenuScreen(),
   ];
 
   @override
@@ -93,10 +95,12 @@ class _MainScreenState extends State<MainScreen> {
           items: const [
             BottomNavigationBarItem(icon: Icon(Icons.home), label: 'หน้าหลัก'),
             BottomNavigationBarItem(
-                icon: Icon(Icons.article), label: 'เพิ่มโปรไฟล์'),
+                icon: Icon(Icons.add), label: 'เพิ่มโปรไฟล์'),
             BottomNavigationBarItem(icon: Icon(Icons.menu), label: 'เมนู'),
           ],
           backgroundColor: Colors.white,
+          selectedItemColor: Colors.brown,
+          unselectedItemColor: Colors.grey,
           elevation: 0,
         ),
       ),
