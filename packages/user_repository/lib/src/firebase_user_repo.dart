@@ -63,4 +63,14 @@ class FirebaseUserRepo implements UserRepository {
       rethrow;
     }
   }
+
+  @override
+  Future<void> resetPassword(String email) async {
+    try {
+      await _firebaseAuth.sendPasswordResetEmail(email: email);
+    } catch (e) {
+      log('Failed to send password reset email: ${e.toString()}');
+      rethrow;
+    }
+  }
 }

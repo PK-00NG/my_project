@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_project/Screens/Pages/auth/blocs/sign_in/sign_in_bloc.dart';
+import 'package:my_project/Screens/Pages/auth/views/forget_password_screen.dart';
 import 'package:my_project/components/my_text_field.dart';
 
 class SignInScreen extends StatefulWidget {
@@ -127,6 +128,17 @@ class _SignInScreenState extends State<SignInScreen> {
                     icon: Icon(iconPassword),
                   ),
                 ),
+              ),
+              // ในส่วนของ build method ของ SignInScreen
+              TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ForgetPasswordScreen()),
+                  );
+                },
+                child: Text('Forgot Password?'),
               ),
               const SizedBox(height: 20),
               !signInRequired
