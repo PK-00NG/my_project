@@ -27,6 +27,41 @@ class _SignUpScreenState extends State<SignUpScreen> {
   bool containsSpecialChar = false;
   bool contains8Lenght = false;
 
+  final FocusNode _emailFocus = FocusNode();
+  final FocusNode _passwordFocus = FocusNode();
+  final FocusNode _nameFocus = FocusNode();
+
+  bool _isEmailFocused = false;
+  bool _isPasswordFocused = false;
+  bool _isNameFocused = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _emailFocus.addListener(_onFocusChange);
+    _passwordFocus.addListener(_onFocusChange);
+    _nameFocus.addListener(_onFocusChange);
+  }
+
+  void _onFocusChange() {
+    setState(() {
+      _isEmailFocused = _emailFocus.hasFocus;
+      _isPasswordFocused = _passwordFocus.hasFocus;
+      _isNameFocused = _nameFocus.hasFocus;
+    });
+  }
+
+  @override
+  void dispose() {
+    _emailFocus.removeListener(_onFocusChange);
+    _passwordFocus.removeListener(_onFocusChange);
+    _nameFocus.removeListener(_onFocusChange);
+    _emailFocus.dispose();
+    _passwordFocus.dispose();
+    _nameFocus.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocListener<SignUpBloc, SignUpState>(
@@ -57,6 +92,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       obscureText: false,
                       keyboardType: TextInputType.emailAddress,
                       prefixIcon: const Icon(CupertinoIcons.mail_solid),
+                      focusNode: _emailFocus,
+                      isFocused: _isEmailFocused,
                       validator: (val) {
                         if (val!.isEmpty) {
                           return 'Please fill in this field';
@@ -76,6 +113,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       obscureText: obscurePassword,
                       keyboardType: TextInputType.visiblePassword,
                       prefixIcon: const Icon(CupertinoIcons.lock_fill),
+                      focusNode: _passwordFocus,
+                      isFocused: _isPasswordFocused,
                       OnChanged: (val) {
                         if (val!.contains(RegExp(r'[A-Z]'))) {
                           setState(() {
@@ -129,11 +168,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         onPressed: () {
                           setState(() {
                             obscurePassword = !obscurePassword;
-                            if (obscurePassword) {
-                              iconPassword = CupertinoIcons.eye_fill;
-                            } else {
-                              iconPassword = CupertinoIcons.eye_slash_fill;
-                            }
+                            iconPassword = obscurePassword
+                                ? CupertinoIcons.eye_fill
+                                : CupertinoIcons.eye_slash_fill;
                           });
                         },
                         icon: Icon(iconPassword),
@@ -210,6 +247,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       obscureText: false,
                       keyboardType: TextInputType.name,
                       prefixIcon: const Icon(CupertinoIcons.person_fill),
+                      focusNode: _nameFocus,
+                      isFocused: _isNameFocused,
                       validator: (val) {
                         if (val!.isEmpty) {
                           return 'Please fill in this field';
@@ -242,7 +281,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   Theme.of(context).colorScheme.primary,
                               foregroundColor: Colors.white,
                               shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(60))),
+                                  borderRadius: BorderRadius.circular(8))),
                           child: const Padding(
                             padding: EdgeInsets.symmetric(
                                 horizontal: 25, vertical: 10),
@@ -251,7 +290,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                   color: Colors.white,
-                                  fontSize: 16,
+                                  fontSize: 20,
                                   fontWeight: FontWeight.w600),
                             ),
                           ),

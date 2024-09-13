@@ -20,6 +20,34 @@ class _SignInScreenState extends State<SignInScreen> {
   bool obscurePassword = true;
   String? _errorMsg;
 
+  final FocusNode _emailFocus = FocusNode();
+  final FocusNode _passwordFocus = FocusNode();
+  bool _isEmailFocused = false;
+  bool _isPasswordFocused = false;
+
+  @override
+  void dispose() {
+    _emailFocus.removeListener(_onFocusChange);
+    _passwordFocus.removeListener(_onFocusChange);
+    _emailFocus.dispose();
+    _passwordFocus.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _emailFocus.addListener(_onFocusChange);
+    _passwordFocus.addListener(_onFocusChange);
+  }
+
+  void _onFocusChange() {
+    setState(() {
+      _isEmailFocused = _emailFocus.hasFocus;
+      _isPasswordFocused = _passwordFocus.hasFocus;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocListener<SignInBloc, SignInState>(
@@ -53,6 +81,8 @@ class _SignInScreenState extends State<SignInScreen> {
                     keyboardType: TextInputType.emailAddress,
                     prefixIcon: const Icon(CupertinoIcons.mail_solid),
                     errorMsg: _errorMsg,
+                    focusNode: _emailFocus,
+                    isFocused: _isEmailFocused,
                     validator: (val) {
                       if (val!.isEmpty) {
                         return 'Please fill in this field';
@@ -73,6 +103,8 @@ class _SignInScreenState extends State<SignInScreen> {
                   keyboardType: TextInputType.visiblePassword,
                   prefixIcon: const Icon(CupertinoIcons.lock_fill),
                   errorMsg: _errorMsg,
+                  focusNode: _passwordFocus,
+                  isFocused: _isPasswordFocused,
                   validator: (val) {
                     if (val!.isEmpty) {
                       return 'Please fill in this field';
@@ -87,11 +119,9 @@ class _SignInScreenState extends State<SignInScreen> {
                     onPressed: () {
                       setState(() {
                         obscurePassword = !obscurePassword;
-                        if (obscurePassword) {
-                          iconPassword = CupertinoIcons.eye_fill;
-                        } else {
-                          iconPassword = CupertinoIcons.eye_slash_fill;
-                        }
+                        iconPassword = obscurePassword
+                            ? CupertinoIcons.eye_fill
+                            : CupertinoIcons.eye_slash_fill;
                       });
                     },
                     icon: Icon(iconPassword),
@@ -124,7 +154,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             textAlign: TextAlign.center,
                             style: TextStyle(
                                 color: Colors.white,
-                                fontSize: 16,
+                                fontSize: 20,
                                 fontWeight: FontWeight.w600),
                           ),
                         ),

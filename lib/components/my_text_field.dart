@@ -12,20 +12,30 @@ class MyTextField extends StatelessWidget {
   final FocusNode? focusNode;
   final String? errorMsg;
   final String? Function(String?)? OnChanged;
+  final Color? fillColor;
+  final Color? borderColor;
+  final bool isFocused;
 
-  const MyTextField(
-      {super.key,
-      required this.controller,
-      required this.hintText,
-      required this.obscureText,
-      required this.keyboardType,
-      this.suffixIcon,
-      this.onTap,
-      this.prefixIcon,
-      this.validator,
-      this.focusNode,
-      this.errorMsg,
-      this.OnChanged});
+  final Color _activeColor = Colors.white;
+  final Color _inactiveColor = const Color(0xFFE8E8E8);
+
+  const MyTextField({
+    Key? key,
+    required this.controller,
+    required this.hintText,
+    required this.obscureText,
+    required this.keyboardType,
+    this.suffixIcon,
+    this.onTap,
+    this.prefixIcon,
+    this.validator,
+    this.focusNode,
+    this.errorMsg,
+    this.OnChanged,
+    this.fillColor,
+    this.borderColor,
+    required this.isFocused,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +60,7 @@ class MyTextField extends StatelessWidget {
           borderSide:
               BorderSide(color: Theme.of(context).colorScheme.secondary),
         ),
-        fillColor: Colors.grey.shade200,
+        fillColor: isFocused ? _activeColor : _inactiveColor,
         filled: true,
         hintText: hintText,
         hintStyle: TextStyle(color: Colors.grey[500]),
