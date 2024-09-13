@@ -115,7 +115,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                 Theme.of(context).colorScheme.primary,
                             foregroundColor: Colors.white,
                             shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8))),
+                                borderRadius: BorderRadius.circular(60))),
                         child: const Padding(
                           padding: EdgeInsets.symmetric(
                               horizontal: 25, vertical: 10),
