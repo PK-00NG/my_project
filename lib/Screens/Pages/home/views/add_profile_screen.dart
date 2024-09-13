@@ -15,7 +15,7 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
   final Map<String, TextEditingController> _controllers = {};
 
   // Define colors
-  final Color _inactiveColor = Colors.grey[300]!;
+  final Color _inactiveColor = const Color(0xFFE8E8E8);
   final Color _activeColor = Colors.white;
   final Color _borderColor = Colors.brown;
 
