@@ -14,7 +14,7 @@ class _HomeScreenState extends State<HomeScreen> {
   // Define colors
   final Color _inactiveColor = const Color(0xFFE8E8E8);
   final Color _activeColor = Colors.white;
-  final Color _borderColor = Colors.brown;
+  final Color _borderColor = const Color(0xFFD2B48C);
 
   @override
   void initState() {
@@ -47,12 +47,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: const [
                   Text(
                     'ยังไม่มีโปรไฟล์',
-                    style: TextStyle(fontSize: 18, color: Colors.grey),
+                    style: TextStyle(fontSize: 18, color: Color(0xFFD2B48C)),
                   ),
                   SizedBox(height: 8),
                   Text(
                     'กรุณาเพิ่มโปรไฟล์',
-                    style: TextStyle(fontSize: 18, color: Colors.grey),
+                    style: TextStyle(fontSize: 18, color: Color(0xFFD2B48C)),
                   ),
                 ],
               ),
