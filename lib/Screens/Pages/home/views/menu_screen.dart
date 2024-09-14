@@ -80,16 +80,21 @@ class _MenuScreenState extends State<MenuScreen> {
                 icon: Icons.straighten,
               ),
               SizedBox(height: 20),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: ElevatedButton(
-                  onPressed: _signOut,
-                  child: Text('ออกจากระบบ'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
-                    foregroundColor: Colors.white,
-                    minimumSize: const Size(
-                        double.infinity, 50), // ทำให้ปุ่มเต็มความกว้าง
+              Center(
+                // ใช้ Center เพื่อจัดตำแหน่งปุ่มให้อยู่กลาง
+                child: SizedBox(
+                  width: 200, // กำหนดความกว้างของปุ่มเป็น 200 พิกเซล
+                  child: ElevatedButton(
+                    onPressed: _signOut,
+                    child: Text('ออกจากระบบ'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red,
+                      foregroundColor: Colors.white,
+                      minimumSize: const Size(double.infinity, 50),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
                   ),
                 ),
               ),

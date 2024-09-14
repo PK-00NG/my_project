@@ -110,28 +110,32 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
                 const SizedBox(height: 16),
                 _buildTextField('ชื่อเจ้าของในปัจจุบัน'),
                 const SizedBox(height: 24),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    child: const Text(
-                      'บันทึก',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
+                const SizedBox(height: 24),
+                Center(
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width *
+                        0.5, // กำหนดความกว้างของปุ่มเป็น 200 พิกเซล
+                    child: ElevatedButton(
+                      child: const Text(
+                        'บันทึก',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        // TODO: Save the form data
-                        // Navigate back or show confirmation
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.brown,
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          // TODO: Save the form data
+                          // Navigate back or show confirmation
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.brown,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
                       ),
                     ),
                   ),
