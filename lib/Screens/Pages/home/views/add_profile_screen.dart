@@ -84,7 +84,10 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
               children: [
                 const Text(
                   'เพิ่มโปรไฟล์',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.brown),
                 ),
                 const SizedBox(height: 16),
                 _buildTextField('ชื่อโค'),
