@@ -32,9 +32,37 @@ class _MenuScreenState extends State<MenuScreen> {
     }
   }
 
+  void _showSignOutConfirmation() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('ยืนยันการออกจากระบบ'),
+          content: Text('คุณต้องการออกจากระบบใช่หรือไม่?'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('ยกเลิก'),
+              onPressed: () {
+                Navigator.of(context).pop(); // ปิดหน้าต่างยืนยัน
+              },
+            ),
+            TextButton(
+              child: Text('ยืนยัน'),
+              onPressed: () {
+                Navigator.of(context).pop(); // ปิดหน้าต่างยืนยัน
+                _signOut(); // เรียกใช้ฟังก์ชันออกจากระบบ
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void _signOut() {
     context.read<SignInBloc>().add(SignOutRequired());
-    print("Sign out button pressed");
+    // TODO: เพิ่มโค้ดสำหรับนำผู้ใช้ไปยังหน้า login หรือหน้าอื่นๆ ตามที่ต้องการ
+    print("ออกจากระบบสำเร็จ");
   }
 
   @override
@@ -85,7 +113,7 @@ class _MenuScreenState extends State<MenuScreen> {
                 child: SizedBox(
                   width: 200, // กำหนดความกว้างของปุ่มเป็น 200 พิกเซล
                   child: ElevatedButton(
-                    onPressed: _signOut,
+                    onPressed: _showSignOutConfirmation,
                     child: Text('ออกจากระบบ'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.red,

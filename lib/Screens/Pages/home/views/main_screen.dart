@@ -34,41 +34,41 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
-  // Widget _buildBackground(BuildContext context) {
-  //   return SingleChildScrollView(
-  //     child: SizedBox(
-  //       height: MediaQuery.of(context).size.height,
-  //       child: Stack(
-  //         children: [
-  //           _buildCircle(20, -1.2, 1, Theme.of(context).colorScheme.tertiary),
-  //           _buildCircle(
-  //               -2.7, -1.2, 1.3, Theme.of(context).colorScheme.secondary),
-  //           _buildCircle(
-  //               2.7, -1.2, 1.3, Theme.of(context).colorScheme.secondary),
-  //           BackdropFilter(
-  //             filter: ImageFilter.blur(sigmaX: 100.0, sigmaY: 100.0),
-  //             child: Container(),
-  //           ),
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  // }
+  Widget _buildBackground(BuildContext context) {
+    return SingleChildScrollView(
+      child: SizedBox(
+        height: MediaQuery.of(context).size.height,
+        child: Stack(
+          children: [
+            _buildCircle(20, -1.2, 1, Theme.of(context).colorScheme.tertiary),
+            _buildCircle(
+                -2.7, -1.2, 1.3, Theme.of(context).colorScheme.secondary),
+            _buildCircle(
+                2.7, -1.2, 1.3, Theme.of(context).colorScheme.secondary),
+            BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 100.0, sigmaY: 100.0),
+              child: Container(),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
-  // Widget _buildCircle(
-  //     double alignX, double alignY, double sizeDivisor, Color color) {
-  //   return Align(
-  //     alignment: AlignmentDirectional(alignX, alignY),
-  //     child: Container(
-  //       height: MediaQuery.of(context).size.width / sizeDivisor,
-  //       width: MediaQuery.of(context).size.width / sizeDivisor,
-  //       decoration: BoxDecoration(
-  //         shape: BoxShape.circle,
-  //         color: color,
-  //       ),
-  //     ),
-  //   );
-  // }
+  Widget _buildCircle(
+      double alignX, double alignY, double sizeDivisor, Color color) {
+    return Align(
+      alignment: AlignmentDirectional(alignX, alignY),
+      child: Container(
+        height: MediaQuery.of(context).size.width / sizeDivisor,
+        width: MediaQuery.of(context).size.width / sizeDivisor,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: color,
+        ),
+      ),
+    );
+  }
 
   Widget _buildBottomNavigationBar() {
     return Container(

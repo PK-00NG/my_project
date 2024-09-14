@@ -110,11 +110,9 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
                 const SizedBox(height: 16),
                 _buildTextField('ชื่อเจ้าของในปัจจุบัน'),
                 const SizedBox(height: 24),
-                const SizedBox(height: 24),
                 Center(
                   child: SizedBox(
-                    width: MediaQuery.of(context).size.width *
-                        0.5, // กำหนดความกว้างของปุ่มเป็น 200 พิกเซล
+                    width: MediaQuery.of(context).size.width * 0.5,
                     child: ElevatedButton(
                       child: const Text(
                         'บันทึก',
