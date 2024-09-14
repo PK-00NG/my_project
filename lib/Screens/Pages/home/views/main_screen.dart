@@ -26,7 +26,7 @@ class _MainScreenState extends State<MainScreen> {
       backgroundColor: Colors.white,
       body: Stack(
         children: [
-          // _buildBackground(context),
+          _buildBackground(context),
           _screens[_currentIndex],
         ],
       ),
