@@ -13,9 +13,9 @@ class MenuScreen extends StatefulWidget {
 }
 
 class _MenuScreenState extends State<MenuScreen> {
-  String? _selectedWeightUnit = 'กิโลกรัม';
-  String? _selectedLengthUnit = 'เซนติเมตร';
-  File? _image;
+  final ValueNotifier<String?> _selectedWeightUnit = ValueNotifier('กิโลกรัม');
+  final ValueNotifier<String?> _selectedLengthUnit = ValueNotifier('เซนติเมตร');
+  final ValueNotifier<File?> _image = ValueNotifier(null);
   final ImagePicker _picker = ImagePicker();
 
   Future<void> _getImage() async {
@@ -23,14 +23,21 @@ class _MenuScreenState extends State<MenuScreen> {
       final XFile? pickedFile =
           await _picker.pickImage(source: ImageSource.gallery);
       if (pickedFile != null) {
-        setState(() {
-          _image = File(pickedFile.path);
-        });
+        _image.value = File(pickedFile.path);
       }
     } catch (e) {
       print("Error picking image: $e");
     }
   }
+
+  static const TextStyle _titleStyle = TextStyle(
+    fontSize: 24,
+    fontWeight: FontWeight.bold,
+    color: Colors.brown,
+  );
+
+  static const EdgeInsets _cardMargin =
+      EdgeInsets.symmetric(horizontal: 16, vertical: 8);
 
   void _showSignOutConfirmation() {
     showDialog(
@@ -76,35 +83,19 @@ class _MenuScreenState extends State<MenuScreen> {
             children: [
               Padding(
                 padding: const EdgeInsets.all(16.0),
-                child: Text(
-                  'เมนูการตั้งค่า',
-                  style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.brown),
-                ),
+                child: Text('เมนูการตั้งค่า', style: _titleStyle),
               ),
               _buildExpandableUserInfo(),
               _buildExpandableDropdown(
                 'หน่วยวัดน้ำหนัก',
                 ['กิโลกรัม', 'ปอนด์'],
                 _selectedWeightUnit,
-                (value) {
-                  setState(() {
-                    _selectedWeightUnit = value;
-                  });
-                },
                 icon: Icons.balance,
               ),
               _buildExpandableDropdown(
                 'หน่วยวัดความยาว',
                 ['เซนติเมตร', 'นิ้ว'],
                 _selectedLengthUnit,
-                (value) {
-                  setState(() {
-                    _selectedLengthUnit = value;
-                  });
-                },
                 icon: Icons.straighten,
               ),
               SizedBox(height: 20),
@@ -136,17 +127,22 @@ class _MenuScreenState extends State<MenuScreen> {
 
   Widget _buildExpandableUserInfo() {
     return Card(
-      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      margin: _cardMargin,
       child: ExpansionTile(
         leading: GestureDetector(
           onTap: _getImage,
-          child: CircleAvatar(
-            radius: 30,
-            backgroundColor: Colors.grey[200],
-            backgroundImage: _image != null ? FileImage(_image!) : null,
-            child: _image == null
-                ? Icon(Icons.add_a_photo, color: Colors.grey[800])
-                : null,
+          child: ValueListenableBuilder<File?>(
+            valueListenable: _image,
+            builder: (context, image, child) {
+              return CircleAvatar(
+                radius: 30,
+                backgroundColor: Colors.grey[200],
+                backgroundImage: image != null ? FileImage(image) : null,
+                child: image == null
+                    ? Icon(Icons.add_a_photo, color: Colors.grey[800])
+                    : null,
+              );
+            },
           ),
         ),
         title: Text('นายธนเดช'),
@@ -170,11 +166,11 @@ class _MenuScreenState extends State<MenuScreen> {
     );
   }
 
-  Widget _buildExpandableDropdown(String title, List<String> options,
-      String? selectedValue, Function(String?) onChanged,
+  Widget _buildExpandableDropdown(
+      String title, List<String> options, ValueNotifier<String?> selectedValue,
       {IconData? icon}) {
     return Card(
-      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      margin: _cardMargin,
       child: ExpansionTile(
         leading: icon != null ? Icon(icon, color: Colors.brown) : null,
         title: Text(title),
@@ -182,19 +178,27 @@ class _MenuScreenState extends State<MenuScreen> {
           Padding(
             padding:
                 const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-            child: DropdownButton<String>(
-              isExpanded: true,
-              value: selectedValue,
-              onChanged: onChanged,
-              items: options.map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
+            child: ValueListenableBuilder<String?>(
+              valueListenable: selectedValue,
+              builder: (context, value, child) {
+                return DropdownButton<String>(
+                  isExpanded: true,
                   value: value,
-                  child: Text(value),
+                  onChanged: (newValue) {
+                    if (newValue != null) {
+                      selectedValue.value = newValue;
+                    }
+                  },
+                  items: options.map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
                 );
-              }).toList(),
+              },
             ),
           ),
-          // เพิ่มข้อมูลหรือตัวเลือกเพิ่มเติมตามต้องการ
         ],
       ),
     );

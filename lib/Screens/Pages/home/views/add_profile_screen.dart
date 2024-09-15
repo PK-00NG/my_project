@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:my_project/Screens/Pages/home/views/home_screen.dart';
 
 class AddProfileScreen extends StatefulWidget {
-  const AddProfileScreen({Key? key}) : super(key: key);
+  final Function(Map<String, dynamic>) onSave;
+
+  const AddProfileScreen({Key? key, required this.onSave}) : super(key: key);
 
   @override
   _AddProfileScreenState createState() => _AddProfileScreenState();
@@ -19,10 +22,11 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
   final Color _activeColor = Colors.white;
   final Color _borderColor = Colors.brown;
 
+  final Map<String, ValueNotifier<bool>> _highlightNotifiers = {};
+
   @override
   void initState() {
     super.initState();
-    // Initialize focus nodes and controllers for each field
     [
       'ชื่อโค',
       'หมายเลขโค',
@@ -37,10 +41,42 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
     ].forEach((field) {
       _focusNodes[field] = FocusNode();
       _controllers[field] = TextEditingController();
+      _highlightNotifiers[field] = ValueNotifier<bool>(false);
       _focusNodes[field]!.addListener(() {
-        setState(() {}); // Rebuild when focus changes
+        _updateHighlight(field);
+      });
+      _controllers[field]!.addListener(() {
+        _updateHighlight(field);
       });
     });
+
+    // Set default values for dropdown fields
+    _controllers['เพศ']!.text = 'ผู้';
+    _controllers['สายพันธุ์']!.text = 'บราห์มัน';
+  }
+
+  void _updateHighlight(String field) {
+    _highlightNotifiers[field]!.value =
+        _focusNodes[field]!.hasFocus || _controllers[field]!.text.isNotEmpty;
+  }
+
+  void _saveProfile() {
+    if (_formKey.currentState!.validate()) {
+      final profileData = {
+        'ชื่อโค': _controllers['ชื่อโค']!.text,
+        'หมายเลขโค': _controllers['หมายเลขโค']!.text,
+        'เพศ': _controllers['เพศ']!.text,
+        'วัน/เดือน/ปีเกิด': _controllers['วัน/เดือน/ปีเกิด']!.text,
+        'สายพันธุ์': _controllers['สายพันธุ์']!.text,
+        'สีตัวโค': _controllers['สีตัวโค']!.text,
+        'หมายเลขพ่อพันธุ์': _controllers['หมายเลขพ่อพันธุ์']!.text,
+        'หมายเลขแม่พันธุ์': _controllers['หมายเลขแม่พันธุ์']!.text,
+        'ชื่อผู้เลี้ยง': _controllers['ชื่อผู้เลี้ยง']!.text,
+        'ชื่อเจ้าของในปัจจุบัน': _controllers['ชื่อเจ้าของในปัจจุบัน']!.text,
+      };
+      widget.onSave(profileData);
+      Navigator.of(context).pop(profileData); // ส่งข้อมูลกลับไปยังหน้าก่อนหน้า
+    }
   }
 
   @override
@@ -50,9 +86,21 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
       node.removeListener(() {});
       node.dispose();
     });
-    _controllers.values.forEach((controller) => controller.dispose());
+    _highlightNotifiers.values.forEach((notifier) => notifier.dispose());
     super.dispose();
   }
+
+  static const TextStyle _titleStyle = TextStyle(
+    fontSize: 24,
+    fontWeight: FontWeight.bold,
+    color: Colors.brown,
+  );
+
+  static const TextStyle _buttonTextStyle = TextStyle(
+    color: Colors.white,
+    fontSize: 18,
+    fontWeight: FontWeight.bold,
+  );
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -82,13 +130,7 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const Text(
-                  'เพิ่มโปรไฟล์',
-                  style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.brown),
-                ),
+                const Text('เพิ่มโปรไฟล์', style: _titleStyle),
                 const SizedBox(height: 16),
                 _buildTextField('ชื่อโค'),
                 const SizedBox(height: 16),
@@ -98,7 +140,8 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
                 const SizedBox(height: 16),
                 _buildDateField(),
                 const SizedBox(height: 16),
-                _buildDropdownField('สายพันธุ์', ['บราห์มัน', 'ชาโรเลส์']),
+                _buildDropdownField(
+                    'สายพันธุ์', ['บราห์มัน', 'ชาโรเลส์', 'บีฟมาสเตอร์']),
                 const SizedBox(height: 16),
                 _buildTextField('สีตัวโค'),
                 const SizedBox(height: 16),
@@ -114,20 +157,8 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
                   child: SizedBox(
                     width: MediaQuery.of(context).size.width * 0.5,
                     child: ElevatedButton(
-                      child: const Text(
-                        'บันทึก',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          // TODO: Save the form data
-                          // Navigate back or show confirmation
-                        }
-                      },
+                      child: const Text('บันทึก', style: _buttonTextStyle),
+                      onPressed: _saveProfile,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.brown,
                         padding: const EdgeInsets.symmetric(vertical: 16),
@@ -148,35 +179,49 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
 
   Widget _buildTextField(String label,
       {int maxLines = 1, TextInputType? keyboardType}) {
-    return TextFormField(
-      focusNode: _focusNodes[label],
-      controller: _controllers[label],
-      decoration: InputDecoration(
-        labelText: label,
-        filled: true,
-        fillColor: _shouldHighlight(label) ? _activeColor : _inactiveColor,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: _shouldHighlight(label)
-              ? BorderSide(color: _borderColor, width: 1)
-              : BorderSide.none,
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide(color: _borderColor, width: 1),
-        ),
-      ),
-      maxLines: maxLines,
-      keyboardType: keyboardType,
-      onChanged: (value) {
-        setState(() {}); // Trigger rebuild to update colors
+    return ValueListenableBuilder<bool>(
+      valueListenable: _highlightNotifiers[label]!,
+      builder: (context, shouldHighlight, child) {
+        return TextFormField(
+          focusNode: _focusNodes[label],
+          controller: _controllers[label],
+          decoration: InputDecoration(
+            labelText: label,
+            filled: true,
+            fillColor: shouldHighlight ? _activeColor : _inactiveColor,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: _shouldHighlight(label)
+                  ? BorderSide(color: _borderColor, width: 1)
+                  : BorderSide.none,
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: BorderSide(color: _borderColor, width: 1),
+            ),
+          ),
+          maxLines: maxLines,
+          keyboardType: keyboardType,
+          onChanged: (value) {
+            setState(() {}); // Trigger rebuild to update colors
+          },
+          style: TextStyle(color: Colors.black),
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'กรุณากรอก$label';
+            }
+            return null;
+          },
+        );
       },
-      style: TextStyle(color: Colors.black),
     );
   }
 
   Widget _buildDropdownField(String label, List<String> items) {
     return DropdownButtonFormField<String>(
+      value: _controllers[label]!.text.isNotEmpty
+          ? _controllers[label]!.text
+          : null,
       focusNode: _focusNodes[label],
       decoration: InputDecoration(
         labelText: label,
@@ -205,6 +250,12 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
         });
       },
       style: TextStyle(color: Colors.black),
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'กรุณาเลือก$label';
+        }
+        return null;
+      },
     );
   }
 
@@ -234,6 +285,12 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
             ),
             readOnly: true,
             onTap: () => _selectDate(context),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'กรุณาเลือกวันเดือนปีเกิด';
+              }
+              return null;
+            },
           ),
         ),
         IconButton(
