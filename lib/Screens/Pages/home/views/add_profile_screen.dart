@@ -49,15 +49,15 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
         _updateHighlight(field);
       });
     });
-
-    // Set default values for dropdown fields
-    _controllers['เพศ']!.text = 'ผู้';
-    _controllers['สายพันธุ์']!.text = 'บราห์มัน';
   }
 
   void _updateHighlight(String field) {
-    _highlightNotifiers[field]!.value =
-        _focusNodes[field]!.hasFocus || _controllers[field]!.text.isNotEmpty;
+    if (mounted) {
+      setState(() {
+        _highlightNotifiers[field]!.value = _focusNodes[field]!.hasFocus ||
+            _controllers[field]!.text.isNotEmpty;
+      });
+    }
   }
 
   void _saveProfile() {
@@ -75,7 +75,6 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
         'ชื่อเจ้าของในปัจจุบัน': _controllers['ชื่อเจ้าของในปัจจุบัน']!.text,
       };
       widget.onSave(profileData);
-      Navigator.of(context).pop(profileData); // ส่งข้อมูลกลับไปยังหน้าก่อนหน้า
     }
   }
 
@@ -203,7 +202,7 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
           maxLines: maxLines,
           keyboardType: keyboardType,
           onChanged: (value) {
-            setState(() {}); // Trigger rebuild to update colors
+            _updateHighlight(label);
           },
           style: TextStyle(color: Colors.black),
           validator: (value) {
@@ -218,43 +217,49 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
   }
 
   Widget _buildDropdownField(String label, List<String> items) {
-    return DropdownButtonFormField<String>(
-      value: _controllers[label]!.text.isNotEmpty
-          ? _controllers[label]!.text
-          : null,
-      focusNode: _focusNodes[label],
-      decoration: InputDecoration(
-        labelText: label,
-        filled: true,
-        fillColor: _shouldHighlight(label) ? _activeColor : _inactiveColor,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: _shouldHighlight(label)
-              ? BorderSide(color: _borderColor, width: 1)
-              : BorderSide.none,
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide(color: _borderColor, width: 1),
-        ),
-      ),
-      items: items.map((String value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Text(value),
+    return ValueListenableBuilder<bool>(
+      valueListenable: _highlightNotifiers[label]!,
+      builder: (context, shouldHighlight, _) {
+        return DropdownButtonFormField<String>(
+          value: _controllers[label]!.text.isNotEmpty
+              ? _controllers[label]!.text
+              : null,
+          focusNode: _focusNodes[label],
+          decoration: InputDecoration(
+            labelText: label,
+            filled: true,
+            fillColor: shouldHighlight ? _activeColor : _inactiveColor,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: shouldHighlight
+                  ? BorderSide(color: _borderColor, width: 1)
+                  : BorderSide.none,
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: BorderSide(color: _borderColor, width: 1),
+            ),
+          ),
+          items: items.map((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Text(value),
+            );
+          }).toList(),
+          onChanged: (value) {
+            setState(() {
+              _controllers[label]!.text = value ?? '';
+              _updateHighlight(label);
+            });
+          },
+          style: TextStyle(color: Colors.black),
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'กรุณาเลือก$label';
+            }
+            return null;
+          },
         );
-      }).toList(),
-      onChanged: (value) {
-        setState(() {
-          _controllers[label]!.text = value ?? '';
-        });
-      },
-      style: TextStyle(color: Colors.black),
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return 'กรุณาเลือก$label';
-        }
-        return null;
       },
     );
   }

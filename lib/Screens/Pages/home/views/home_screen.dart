@@ -71,23 +71,26 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           Expanded(
-            child: widget.profiles.isEmpty
-                ? const Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text('ยังไม่มีโปรไฟล์', style: _messageStyle),
-                        SizedBox(height: 8),
-                        Text('กรุณาเพิ่มโปรไฟล์', style: _messageStyle),
-                      ],
-                    ),
-                  )
-                : ListView.builder(
-                    itemCount: widget.profiles.length,
-                    itemBuilder: (context, index) {
-                      return _buildProfileCard(widget.profiles[index]);
-                    },
-                  ),
+            child: ValueListenableBuilder<TextEditingValue>(
+              valueListenable: _searchController,
+              builder: (context, searchValue, _) {
+                if (widget.profiles.isEmpty) {
+                  return const Center(
+                      child: Text('ไม่มีโปรไฟล์โค\nกรุณาเพิ่มโปรไฟล์โค',
+                          style: _messageStyle));
+                }
+                final filteredProfiles = _getFilteredProfiles();
+                return filteredProfiles.isEmpty
+                    ? const Center(
+                        child: Text('ไม่พบโปรไฟล์', style: _messageStyle))
+                    : ListView.builder(
+                        itemCount: filteredProfiles.length,
+                        itemBuilder: (context, index) {
+                          return _buildProfileCard(filteredProfiles[index]);
+                        },
+                      );
+              },
+            ),
           ),
         ],
       ),

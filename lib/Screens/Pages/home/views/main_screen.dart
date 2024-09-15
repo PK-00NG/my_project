@@ -20,12 +20,16 @@ const BorderSide _topBorder = BorderSide(
 
 class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 0;
-  late final List<Widget> _screens;
-  final List<Map<String, dynamic>> _profiles = [];
+  List<Map<String, dynamic>> _profiles = [];
+  late List<Widget> _screens;
 
   @override
   void initState() {
     super.initState();
+    _updateScreens();
+  }
+
+  void _updateScreens() {
     _screens = [
       HomeScreen(profiles: _profiles),
       AddProfileScreen(onSave: _handleProfileSave),
@@ -33,11 +37,11 @@ class _MainScreenState extends State<MainScreen> {
     ];
   }
 
-  void _handleProfileSave(Map<String, dynamic> profileData) {
+  void _handleProfileSave(Map<String, dynamic> newProfile) {
     setState(() {
-      _profiles.add(profileData);
+      _profiles.add(newProfile);
       _currentIndex = 0; // Switch to HomeScreen
-      _screens[0] = HomeScreen(profiles: _profiles); // Update HomeScreen
+      _updateScreens();
     });
   }
 
