@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:my_project/Screens/Pages/home/views/home_screen.dart';
 
 class AddProfileScreen extends StatefulWidget {
   final Function(Map<String, dynamic>) onSave;

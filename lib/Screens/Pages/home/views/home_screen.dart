@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_project/Screens/Pages/cattle_profile/views/cattle_profile_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   final List<Map<String, dynamic>> profiles;
@@ -13,8 +14,8 @@ class _HomeScreenState extends State<HomeScreen> {
   final FocusNode _searchFocus = FocusNode();
   final TextEditingController _searchController = TextEditingController();
   final ValueNotifier<bool> _shouldHighlight = ValueNotifier<bool>(false);
+  late List<Map<String, dynamic>> _profiles;
 
-  // Define colors
   final Color _inactiveColor = const Color(0xFFE8E8E8);
   final Color _activeColor = Colors.white;
   final Color _borderColor = const Color(0xFFD2B48C);
@@ -22,9 +23,9 @@ class _HomeScreenState extends State<HomeScreen> {
   List<Map<String, dynamic>> _getFilteredProfiles() {
     final query = _searchController.text.toLowerCase();
     if (query.isEmpty) {
-      return widget.profiles;
+      return _profiles;
     }
-    return widget.profiles.where((profile) {
+    return _profiles.where((profile) {
       final name = profile['ชื่อโค']?.toString().toLowerCase() ?? '';
       final id = profile['หมายเลขโค']?.toString().toLowerCase() ?? '';
       return name.contains(query) || id.contains(query);
@@ -36,6 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     _searchFocus.addListener(_updateHighlight);
     _searchController.addListener(_updateHighlight);
+    _profiles = List.from(widget.profiles);
   }
 
   @override
@@ -56,6 +58,40 @@ class _HomeScreenState extends State<HomeScreen> {
   static const TextStyle _messageStyle =
       TextStyle(fontSize: 18, color: Color(0xFFD2B48C));
 
+  void _openCattleProfile(int index) async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CattleProfileScreen(
+          profileData: _profiles[index],
+          onUpdate: (updatedProfile) {
+            setState(() {
+              _profiles[index] = updatedProfile;
+            });
+          },
+          onDelete: () {
+            setState(() {
+              _profiles.removeAt(index);
+            });
+          },
+        ),
+      ),
+    );
+
+    if (result == true) {
+      // โปรไฟล์ถูกลบ, อัปเดต UI
+      setState(() {
+        // ไม่ต้องทำอะไรเพิ่มเติม เพราะ onDelete ได้ลบโปรไฟล์ออกจาก _profiles แล้ว
+      });
+    }
+  }
+
+  void updateProfiles(List<Map<String, dynamic>> newProfiles) {
+    setState(() {
+      _profiles = newProfiles;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -74,9 +110,10 @@ class _HomeScreenState extends State<HomeScreen> {
             child: ValueListenableBuilder<TextEditingValue>(
               valueListenable: _searchController,
               builder: (context, searchValue, _) {
-                if (widget.profiles.isEmpty) {
+                if (_profiles.isEmpty) {
+                  // ใช้ _profiles แทน widget.profiles
                   return const Center(
-                      child: Text('ไม่มีโปรไฟล์โค\nกรุณาเพิ่มโปรไฟล์โค',
+                      child: Text('     ไม่มีโปรไฟล์โค\nกรุณาเพิ่มโปรไฟล์โค',
                           style: _messageStyle));
                 }
                 final filteredProfiles = _getFilteredProfiles();
@@ -98,6 +135,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildProfileCard(Map<String, dynamic> profile) {
+    final index = _profiles.indexOf(profile);
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: ListTile(
@@ -111,6 +149,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
         isThreeLine: true,
+        onTap: () => _openCattleProfile(index),
       ),
     );
   }
@@ -131,7 +170,7 @@ class _HomeScreenState extends State<HomeScreen> {
               : BorderSide.none,
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(30),
+          borderRadius: BorderRadius.circular(16),
           borderSide: BorderSide(color: _borderColor, width: 1),
         ),
       ),

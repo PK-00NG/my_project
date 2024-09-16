@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:my_project/Screens/Widgets/background_widget.dart';
 import 'home_screen.dart';
 import 'add_profile_screen.dart';
 import 'menu_screen.dart';
@@ -48,46 +49,11 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: Stack(
-        children: [
-          _buildBackground(context),
-          _screens[_currentIndex],
-        ],
+      backgroundColor: Colors.transparent,
+      body: BackgroundWidget(
+        child: _screens[_currentIndex],
       ),
       bottomNavigationBar: _buildBottomNavigationBar(),
-    );
-  }
-
-  Widget _buildBackground(BuildContext context) {
-    return SizedBox.expand(
-      child: Stack(
-        children: [
-          _buildCircle(20, -1.2, 1, Theme.of(context).colorScheme.tertiary),
-          _buildCircle(
-              -2.7, -1.2, 1.3, Theme.of(context).colorScheme.secondary),
-          _buildCircle(2.7, -1.2, 1.3, Theme.of(context).colorScheme.secondary),
-          BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 100.0, sigmaY: 100.0),
-            child: Container(),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildCircle(
-      double alignX, double alignY, double sizeDivisor, Color color) {
-    return Align(
-      alignment: AlignmentDirectional(alignX, alignY),
-      child: Container(
-        height: MediaQuery.of(context).size.width / sizeDivisor,
-        width: MediaQuery.of(context).size.width / sizeDivisor,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: color,
-        ),
-      ),
     );
   }
 
