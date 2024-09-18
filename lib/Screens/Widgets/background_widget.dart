@@ -13,11 +13,11 @@ class BackgroundWidget extends StatelessWidget {
       child: Stack(
         children: [
           _buildBlurredCircle(
-              context, 20, -1.2, 1, Color(0xFFD2B48C).withOpacity(0.5)),
+              context, 20, -1.2, 1, Color(0xFFE8CA2C).withOpacity(1)),
           _buildBlurredCircle(
-              context, -2.7, -1.2, 1.3, Color(0xFFD2B48C).withOpacity(0.5)),
+              context, -2.7, -1.2, 1.3, Color(0xFF421E11).withOpacity(1)),
           _buildBlurredCircle(
-              context, 2.7, -1.2, 1.3, Color(0xFFD2B48C).withOpacity(0.5)),
+              context, 2.7, -1.2, 1.3, Color(0xFF421E11).withOpacity(1)),
           child,
         ],
       ),
