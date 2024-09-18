@@ -91,7 +91,7 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
   static const TextStyle _titleStyle = TextStyle(
     fontSize: 24,
     fontWeight: FontWeight.bold,
-    color: Colors.brown,
+    color: Colors.white,
   );
 
   static const TextStyle _buttonTextStyle = TextStyle(

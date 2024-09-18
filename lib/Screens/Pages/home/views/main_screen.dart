@@ -73,7 +73,8 @@ class _MainScreenState extends State<MainScreen> {
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'หน้าหลัก'),
           BottomNavigationBarItem(
               icon: Icon(Icons.article), label: 'เพิ่มโปรไฟล์'),
-          BottomNavigationBarItem(icon: Icon(Icons.menu), label: 'เมนู'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.manage_accounts_rounded), label: 'ฉัน'),
         ],
         backgroundColor: Colors.white,
         selectedItemColor: Colors.brown,

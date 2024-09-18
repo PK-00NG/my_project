@@ -26,14 +26,20 @@ class _MenuScreenState extends State<MenuScreen> {
         _image.value = File(pickedFile.path);
       }
     } catch (e) {
-      print("Error picking image: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('เกิดข้อผิดพลาดในการเลือกรูปภาพ')),
+      );
     }
   }
 
   static const TextStyle _titleStyle = TextStyle(
-    fontSize: 24,
+    fontSize: 28, // เพิ่มขนาดตัวอักษร
     fontWeight: FontWeight.bold,
-    color: Colors.brown,
+    color: Colors.white,
+  );
+
+  static const TextStyle _contentStyle = TextStyle(
+    fontSize: 18, // เพิ่มขนาดตัวอักษรสำหรับเนื้อหา
   );
 
   static const EdgeInsets _cardMargin =
@@ -44,20 +50,21 @@ class _MenuScreenState extends State<MenuScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('ยืนยันการออกจากระบบ'),
-          content: Text('คุณต้องการออกจากระบบใช่หรือไม่?'),
+          title: Text('ยืนยันการออกจากระบบ', style: TextStyle(fontSize: 22)),
+          content: Text('คุณต้องการออกจากระบบใช่หรือไม่?',
+              style: TextStyle(fontSize: 18)),
           actions: <Widget>[
             TextButton(
-              child: Text('ยกเลิก'),
+              child: Text('ยกเลิก', style: TextStyle(fontSize: 18)),
               onPressed: () {
-                Navigator.of(context).pop(); // ปิดหน้าต่างยืนยัน
+                Navigator.of(context).pop();
               },
             ),
             TextButton(
-              child: Text('ยืนยัน'),
+              child: Text('ยืนยัน', style: TextStyle(fontSize: 18)),
               onPressed: () {
-                Navigator.of(context).pop(); // ปิดหน้าต่างยืนยัน
-                _signOut(); // เรียกใช้ฟังก์ชันออกจากระบบ
+                Navigator.of(context).pop();
+                _signOut();
               },
             ),
           ],
@@ -98,14 +105,13 @@ class _MenuScreenState extends State<MenuScreen> {
                 _selectedLengthUnit,
                 icon: Icons.straighten,
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Center(
-                // ใช้ Center เพื่อจัดตำแหน่งปุ่มให้อยู่กลาง
                 child: SizedBox(
-                  width: 200, // กำหนดความกว้างของปุ่มเป็น 200 พิกเซล
+                  width: 200,
                   child: ElevatedButton(
                     onPressed: _showSignOutConfirmation,
-                    child: Text('ออกจากระบบ'),
+                    child: Text('ออกจากระบบ', style: TextStyle(fontSize: 18)),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.red,
                       foregroundColor: Colors.white,
@@ -117,7 +123,7 @@ class _MenuScreenState extends State<MenuScreen> {
                   ),
                 ),
               ),
-              SizedBox(height: 200),
+              const SizedBox(height: 200),
             ],
           ),
         ),
@@ -127,8 +133,10 @@ class _MenuScreenState extends State<MenuScreen> {
 
   Widget _buildExpandableUserInfo() {
     return Card(
-      margin: _cardMargin,
+      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 15),
       child: ExpansionTile(
+        tilePadding: EdgeInsets.symmetric(
+            horizontal: 16, vertical: 8), // เพิ่ม padding ด้านบนและล่าง
         leading: GestureDetector(
           onTap: _getImage,
           child: ValueListenableBuilder<File?>(
@@ -139,25 +147,28 @@ class _MenuScreenState extends State<MenuScreen> {
                 backgroundColor: Colors.grey[200],
                 backgroundImage: image != null ? FileImage(image) : null,
                 child: image == null
-                    ? Icon(Icons.add_a_photo, color: Colors.grey[800])
+                    ? Icon(Icons.add_a_photo, color: Colors.grey[800], size: 30)
                     : null,
               );
             },
           ),
         ),
-        title: Text('นายธนเดช'),
-        subtitle: Text('Test123@gmail.com'),
+        title: Text('นายธนเดช', style: _contentStyle),
+        subtitle: Text('แตะเพื่อดูข้อมูลเพิ่มเติม',
+            style: TextStyle(fontSize: 14)), // เพิ่ม subtitle
         children: [
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('ข้อมูลเพิ่มเติม:'),
-                SizedBox(height: 8),
-                Text('ตำแหน่ง: ผู้จัดการฟาร์ม'),
-                Text('เบอร์โทร: 081-234-5678'),
-                // เพิ่มข้อมูลอื่นๆ ตามต้องการ
+                Text('ข้อมูลเพิ่มเติม:', style: _contentStyle),
+                const SizedBox(height: 8),
+                Text('เลขประจำตัวสหกรณ์: 1234567890', style: _contentStyle),
+                Text(
+                    'ที่อยู่: 123 ถนนเกษตร แขวงลาดยาว เขตจตุจักร กรุงเทพฯ 10900',
+                    style: _contentStyle),
+                Text('อีเมล: Test123@gmail.com', style: _contentStyle),
               ],
             ),
           ),
@@ -172,8 +183,9 @@ class _MenuScreenState extends State<MenuScreen> {
     return Card(
       margin: _cardMargin,
       child: ExpansionTile(
-        leading: icon != null ? Icon(icon, color: Colors.brown) : null,
-        title: Text(title),
+        leading:
+            icon != null ? Icon(icon, color: Colors.brown, size: 24) : null,
+        title: Text(title, style: _contentStyle),
         children: [
           Padding(
             padding:
@@ -192,7 +204,7 @@ class _MenuScreenState extends State<MenuScreen> {
                   items: options.map<DropdownMenuItem<String>>((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
-                      child: Text(value),
+                      child: Text(value, style: _contentStyle),
                     );
                   }).toList(),
                 );

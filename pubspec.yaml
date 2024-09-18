@@ -51,7 +51,7 @@ dependencies:
 
 flutter_icons:
   android: true
-  image_path: "image/logo.png"
+  image_path: "assets/images/cattle_logo.jpg"
 
 dev_dependencies:
   flutter_test:
