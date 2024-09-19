@@ -3,8 +3,13 @@ import 'package:my_project/Screens/Pages/cattle_profile/views/cattle_profile_scr
 
 class HomeScreen extends StatefulWidget {
   final List<Map<String, dynamic>> profiles;
+  final Function(List<Map<String, dynamic>>) onProfilesUpdated;
 
-  const HomeScreen({Key? key, required this.profiles}) : super(key: key);
+  const HomeScreen({
+    Key? key,
+    required this.profiles,
+    required this.onProfilesUpdated,
+  }) : super(key: key);
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -50,13 +55,27 @@ class _HomeScreenState extends State<HomeScreen> {
     super.dispose();
   }
 
+  @override
+  void didUpdateWidget(HomeScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    print("didUpdateWidget called in HomeScreen");
+    print(
+        "Old profiles: ${oldWidget.profiles.length}, New profiles: ${widget.profiles.length}");
+    if (widget.profiles != oldWidget.profiles) {
+      setState(() {
+        _profiles = List.from(widget.profiles);
+      });
+      print("Updated _profiles in HomeScreen, new length: ${_profiles.length}");
+    }
+  }
+
   void _updateHighlight() {
     _shouldHighlight.value =
         _searchFocus.hasFocus || _searchController.text.isNotEmpty;
   }
 
   static const TextStyle _messageStyle =
-      TextStyle(fontSize: 18, color: Color(0xFFD2B48C));
+      TextStyle(fontSize: 18, color: Color(0xFF7B3113));
 
   void _openCattleProfile(int index) async {
     final result = await Navigator.push(
@@ -67,11 +86,13 @@ class _HomeScreenState extends State<HomeScreen> {
           onUpdate: (updatedProfile) {
             setState(() {
               _profiles[index] = updatedProfile;
+              widget.onProfilesUpdated(_profiles);
             });
           },
           onDelete: () {
             setState(() {
               _profiles.removeAt(index);
+              widget.onProfilesUpdated(_profiles);
             });
           },
         ),
@@ -94,6 +115,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print("HomeScreen build called");
+    print("Number of profiles: ${_profiles.length}");
     return SafeArea(
       child: Column(
         children: [
@@ -110,19 +133,21 @@ class _HomeScreenState extends State<HomeScreen> {
             child: ValueListenableBuilder<TextEditingValue>(
               valueListenable: _searchController,
               builder: (context, searchValue, _) {
+                print("Building list of profiles, total: ${_profiles.length}");
                 if (_profiles.isEmpty) {
-                  // ใช้ _profiles แทน widget.profiles
                   return const Center(
                       child: Text('     ไม่มีโปรไฟล์โค\nกรุณาเพิ่มโปรไฟล์โค',
                           style: _messageStyle));
                 }
                 final filteredProfiles = _getFilteredProfiles();
+                print("Filtered profiles: ${filteredProfiles.length}");
                 return filteredProfiles.isEmpty
                     ? const Center(
                         child: Text('ไม่พบโปรไฟล์', style: _messageStyle))
                     : ListView.builder(
                         itemCount: filteredProfiles.length,
                         itemBuilder: (context, index) {
+                          print("Building profile card at index $index");
                           return _buildProfileCard(filteredProfiles[index]);
                         },
                       );
@@ -135,6 +160,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildProfileCard(Map<String, dynamic> profile) {
+    print("Building profile card for: ${profile['ชื่อโค']}");
     final index = _profiles.indexOf(profile);
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),

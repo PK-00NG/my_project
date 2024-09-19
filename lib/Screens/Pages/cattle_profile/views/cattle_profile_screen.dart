@@ -84,15 +84,15 @@ class _CattleProfileScreenState extends State<CattleProfileScreen> {
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.brown),
+          icon: Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: Text("รายละเอียดโค", style: TextStyle(color: Colors.brown)),
+        title: Text("รายละเอียดโค", style: TextStyle(color: Colors.white)),
         backgroundColor: Colors.transparent,
         elevation: 0,
         actions: [
           IconButton(
-            icon: Icon(Icons.bar_chart, color: Colors.brown),
+            icon: Icon(Icons.bar_chart, color: Colors.white),
             onPressed: () {
               // TODO: Implement statistics functionality
             },
@@ -236,7 +236,7 @@ class _CattleProfileScreenState extends State<CattleProfileScreen> {
 
   Widget _buildOptionsDropdown(BuildContext context) {
     return PopupMenuButton<String>(
-      icon: Icon(Icons.more_vert, color: Colors.brown),
+      icon: Icon(Icons.more_vert, color: Colors.white),
       onSelected: (String result) {
         switch (result) {
           case 'edit':

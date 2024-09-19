@@ -19,9 +19,10 @@ class MyAppView extends StatelessWidget {
             colorScheme: ColorScheme.light(
                 background: Colors.grey.shade200,
                 onBackground: Colors.black,
-                primary: Color(0xFF8B4513),
+                primary: Color(0xFF7B3113),
                 onPrimary: Colors.white,
-                secondary: Color(0xFFD2B48C))),
+                secondary: Color(0xFFE8CA2C),
+                onSecondary: Color(0xFFD2B48C))),
         home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
           builder: ((context, state) {
             if (state.status == AuthenticationStatus.authenticated) {

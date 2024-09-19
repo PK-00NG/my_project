@@ -73,6 +73,7 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
         'ชื่อผู้เลี้ยง': _controllers['ชื่อผู้เลี้ยง']!.text,
         'ชื่อเจ้าของในปัจจุบัน': _controllers['ชื่อเจ้าของในปัจจุบัน']!.text,
       };
+      print("Saving profile from AddProfileScreen: $profileData");
       widget.onSave(profileData);
     }
   }
@@ -158,7 +159,7 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
                       child: const Text('บันทึก', style: _buttonTextStyle),
                       onPressed: _saveProfile,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.brown,
+                        backgroundColor: Color(0xFF7B3113),
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
