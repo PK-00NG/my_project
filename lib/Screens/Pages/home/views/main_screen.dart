@@ -1,9 +1,9 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:my_project/Screens/Pages/home/views/add_profile_screen.dart';
-import 'package:my_project/Screens/Pages/home/views/home_screen.dart';
-import 'package:my_project/Screens/Pages/home/views/menu_screen.dart';
 import 'package:my_project/Screens/Widgets/background_widget.dart';
+import 'home_screen.dart';
+import 'add_profile_screen.dart';
+import 'menu_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -22,58 +22,40 @@ const BorderSide _topBorder = BorderSide(
 class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 0;
   List<Map<String, dynamic>> _profiles = [];
-  bool _showSnackBar = false;
+  late List<Widget> _screens;
 
-  final GlobalKey<State<IndexedStack>> indexedStackKey =
-      GlobalKey<State<IndexedStack>>();
-
-  void _handleProfileSave(Map<String, dynamic> newProfile) {
-    debugPrint("Saving new profile: $newProfile");
-    setState(() {
-      _profiles.add(newProfile);
-      _currentIndex = 0;
-      _showSnackBar = true;
-    });
-    debugPrint("Total profiles after save: ${_profiles.length}");
-    _updateProfiles(_profiles);
+  @override
+  void initState() {
+    super.initState();
+    _updateScreens();
   }
 
-  void _updateProfiles(List<Map<String, dynamic>> updatedProfiles) {
-    debugPrint("Updating profiles in MainScreen: ${updatedProfiles.length}");
-    setState(() {
-      _profiles = updatedProfiles;
-    });
+  void _updateScreens() {
+    _screens = [
+      HomeScreen(profiles: _profiles),
+      AddProfileScreen(onSave: _handleProfileSave),
+      const MenuScreen(),
+    ];
+  }
 
-    if (_currentIndex == 0) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        final homeScreen =
-            (indexedStackKey.currentState?.widget as IndexedStack?)?.children[0]
-                as HomeScreen?;
-        homeScreen?.updateProfiles(_profiles);
-        debugPrint("Called updateProfiles on HomeScreen");
-      });
-    }
+  void _handleProfileSave(Map<String, dynamic> newProfile) {
+    setState(() {
+      _profiles.add(newProfile);
+      _currentIndex = 0; // Switch to HomeScreen
+      _updateScreens();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_showSnackBar) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('บันทึกข้อมูลสำเร็จ')),
-        );
-        setState(() {
-          _showSnackBar = false;
-        });
-      });
-    }
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Stack(
         fit: StackFit.expand,
         children: [
-          const BackgroundWidget(
-            child: SizedBox.shrink(),
+          BackgroundWidget(
+            child:
+                Container(), // ใช้ Container ว่างเปล่าเพื่อให้ BackgroundWidget ครอบคลุมพื้นที่ทั้งหมด
           ),
           Positioned(
             bottom: 20,
@@ -88,19 +70,7 @@ class _MainScreenState extends State<MainScreen> {
               ),
             ),
           ),
-          IndexedStack(
-            key: indexedStackKey,
-            index: _currentIndex,
-            children: [
-              HomeScreen(
-                key: const ValueKey('HomeScreen'),
-                profiles: _profiles,
-                onProfilesUpdated: _updateProfiles,
-              ),
-              AddProfileScreen(onSave: _handleProfileSave),
-              const MenuScreen(),
-            ],
-          ),
+          _screens[_currentIndex], // วาง screen หลักทับบนรูปภาพ
         ],
       ),
       bottomNavigationBar: _buildBottomNavigationBar(),
@@ -117,9 +87,6 @@ class _MainScreenState extends State<MainScreen> {
         onTap: (index) {
           setState(() {
             _currentIndex = index;
-            if (index == 0) {
-              _updateProfiles(_profiles);
-            }
           });
         },
         items: const [

@@ -183,8 +183,9 @@ class _MenuScreenState extends State<MenuScreen> {
     return Card(
       margin: _cardMargin,
       child: ExpansionTile(
-        leading:
-            icon != null ? Icon(icon, color: Colors.brown, size: 24) : null,
+        leading: icon != null
+            ? Icon(icon, color: Color(0xFF7B3113), size: 24)
+            : null,
         title: Text(title, style: _contentStyle),
         children: [
           Padding(

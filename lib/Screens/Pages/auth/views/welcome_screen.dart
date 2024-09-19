@@ -42,7 +42,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                   width: MediaQuery.of(context).size.width,
                   decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: Theme.of(context).colorScheme.secondary),
+                      color: Theme.of(context).colorScheme.onSecondary),
                 ),
               ),
               Align(
