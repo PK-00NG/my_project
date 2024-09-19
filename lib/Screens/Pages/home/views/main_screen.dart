@@ -1,9 +1,9 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:my_project/Screens/Pages/home/views/add_profile_screen.dart';
+import 'package:my_project/Screens/Pages/home/views/home_screen.dart';
+import 'package:my_project/Screens/Pages/home/views/menu_screen.dart';
 import 'package:my_project/Screens/Widgets/background_widget.dart';
-import 'home_screen.dart';
-import 'add_profile_screen.dart';
-import 'menu_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -24,24 +24,35 @@ class _MainScreenState extends State<MainScreen> {
   List<Map<String, dynamic>> _profiles = [];
   bool _showSnackBar = false;
 
+  final GlobalKey<State<IndexedStack>> indexedStackKey =
+      GlobalKey<State<IndexedStack>>();
+
   void _handleProfileSave(Map<String, dynamic> newProfile) {
-    print("Saving new profile: $newProfile");
+    debugPrint("Saving new profile: $newProfile");
     setState(() {
       _profiles.add(newProfile);
       _currentIndex = 0;
       _showSnackBar = true;
     });
-    print("Total profiles after save: ${_profiles.length}");
-    // เพิ่มบรรทัดนี้เพื่อให้แน่ใจว่า HomeScreen ได้รับข้อมูลใหม่
-    if (_currentIndex == 0) {
-      _updateProfiles(_profiles);
-    }
+    debugPrint("Total profiles after save: ${_profiles.length}");
+    _updateProfiles(_profiles);
   }
 
   void _updateProfiles(List<Map<String, dynamic>> updatedProfiles) {
+    debugPrint("Updating profiles in MainScreen: ${updatedProfiles.length}");
     setState(() {
       _profiles = updatedProfiles;
     });
+
+    if (_currentIndex == 0) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        final homeScreen =
+            (indexedStackKey.currentState?.widget as IndexedStack?)?.children[0]
+                as HomeScreen?;
+        homeScreen?.updateProfiles(_profiles);
+        debugPrint("Called updateProfiles on HomeScreen");
+      });
+    }
   }
 
   @override
@@ -49,7 +60,7 @@ class _MainScreenState extends State<MainScreen> {
     if (_showSnackBar) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('บันทึกข้อมูลสำเร็จ')),
+          const SnackBar(content: Text('บันทึกข้อมูลสำเร็จ')),
         );
         setState(() {
           _showSnackBar = false;
@@ -61,8 +72,8 @@ class _MainScreenState extends State<MainScreen> {
       body: Stack(
         fit: StackFit.expand,
         children: [
-          BackgroundWidget(
-            child: Container(),
+          const BackgroundWidget(
+            child: SizedBox.shrink(),
           ),
           Positioned(
             bottom: 20,
@@ -78,15 +89,13 @@ class _MainScreenState extends State<MainScreen> {
             ),
           ),
           IndexedStack(
+            key: indexedStackKey,
             index: _currentIndex,
             children: [
               HomeScreen(
+                key: const ValueKey('HomeScreen'),
                 profiles: _profiles,
-                onProfilesUpdated: (updatedProfiles) {
-                  setState(() {
-                    _profiles = updatedProfiles;
-                  });
-                },
+                onProfilesUpdated: _updateProfiles,
               ),
               AddProfileScreen(onSave: _handleProfileSave),
               const MenuScreen(),
@@ -109,7 +118,6 @@ class _MainScreenState extends State<MainScreen> {
           setState(() {
             _currentIndex = index;
             if (index == 0) {
-              // เมื่อกลับมาที่หน้า Home ให้อัปเดตข้อมูล
               _updateProfiles(_profiles);
             }
           });

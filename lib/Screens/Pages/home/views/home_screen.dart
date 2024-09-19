@@ -43,6 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
     _searchFocus.addListener(_updateHighlight);
     _searchController.addListener(_updateHighlight);
     _profiles = List.from(widget.profiles);
+    debugPrint("HomeScreen initState: profiles length = ${_profiles.length}");
   }
 
   @override
@@ -58,14 +59,12 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void didUpdateWidget(HomeScreen oldWidget) {
     super.didUpdateWidget(oldWidget);
-    print("didUpdateWidget called in HomeScreen");
-    print(
-        "Old profiles: ${oldWidget.profiles.length}, New profiles: ${widget.profiles.length}");
     if (widget.profiles != oldWidget.profiles) {
       setState(() {
         _profiles = List.from(widget.profiles);
       });
-      print("Updated _profiles in HomeScreen, new length: ${_profiles.length}");
+      debugPrint(
+          "HomeScreen didUpdateWidget: profiles updated, new length = ${_profiles.length}");
     }
   }
 
@@ -100,23 +99,22 @@ class _HomeScreenState extends State<HomeScreen> {
     );
 
     if (result == true) {
-      // โปรไฟล์ถูกลบ, อัปเดต UI
-      setState(() {
-        // ไม่ต้องทำอะไรเพิ่มเติม เพราะ onDelete ได้ลบโปรไฟล์ออกจาก _profiles แล้ว
-      });
+      setState(() {});
     }
   }
 
   void updateProfiles(List<Map<String, dynamic>> newProfiles) {
-    setState(() {
-      _profiles = newProfiles;
-    });
+    debugPrint("Updating profiles in HomeScreen: ${newProfiles.length}");
+    if (mounted) {
+      setState(() {
+        _profiles = List.from(newProfiles);
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    print("HomeScreen build called");
-    print("Number of profiles: ${_profiles.length}");
+    debugPrint("HomeScreen build called, profiles: ${_profiles.length}");
     return SafeArea(
       child: Column(
         children: [
@@ -133,24 +131,31 @@ class _HomeScreenState extends State<HomeScreen> {
             child: ValueListenableBuilder<TextEditingValue>(
               valueListenable: _searchController,
               builder: (context, searchValue, _) {
-                print("Building list of profiles, total: ${_profiles.length}");
+                debugPrint(
+                    "Building list of profiles, total: ${_profiles.length}");
+                final filteredProfiles = _getFilteredProfiles();
+                debugPrint("Filtered profiles: ${filteredProfiles.length}");
+
                 if (_profiles.isEmpty) {
                   return const Center(
-                      child: Text('     ไม่มีโปรไฟล์โค\nกรุณาเพิ่มโปรไฟล์โค',
-                          style: _messageStyle));
+                    child: Text(
+                      '     ไม่มีโปรไฟล์โค\nกรุณาเพิ่มโปรไฟล์โค',
+                      style: _messageStyle,
+                    ),
+                  );
+                } else if (filteredProfiles.isEmpty) {
+                  return const Center(
+                    child: Text('ไม่พบโปรไฟล์', style: _messageStyle),
+                  );
+                } else {
+                  return ListView.builder(
+                    itemCount: filteredProfiles.length,
+                    itemBuilder: (context, index) {
+                      debugPrint("Building profile card at index $index");
+                      return _buildProfileCard(filteredProfiles[index]);
+                    },
+                  );
                 }
-                final filteredProfiles = _getFilteredProfiles();
-                print("Filtered profiles: ${filteredProfiles.length}");
-                return filteredProfiles.isEmpty
-                    ? const Center(
-                        child: Text('ไม่พบโปรไฟล์', style: _messageStyle))
-                    : ListView.builder(
-                        itemCount: filteredProfiles.length,
-                        itemBuilder: (context, index) {
-                          print("Building profile card at index $index");
-                          return _buildProfileCard(filteredProfiles[index]);
-                        },
-                      );
               },
             ),
           ),
@@ -160,7 +165,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildProfileCard(Map<String, dynamic> profile) {
-    print("Building profile card for: ${profile['ชื่อโค']}");
+    debugPrint("Building profile card for: ${profile['ชื่อโค']}");
     final index = _profiles.indexOf(profile);
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
