@@ -69,8 +69,15 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                 filter: ImageFilter.blur(sigmaX: 100.0, sigmaY: 100.0),
                 child: Container(),
               ),
-              Center(
-                child: Image.asset('assets/images/cattle_logo.png'),
+              Positioned(
+                top: 50,
+                left: 0,
+                right: 0,
+                child: Image.asset(
+                  'assets/images/cattle_logo.png',
+                  height: MediaQuery.of(context).size.height * 0.4,
+                  fit: BoxFit.contain,
+                ),
               ),
               Align(
                 alignment: AlignmentDirectional(20, 1.0),
