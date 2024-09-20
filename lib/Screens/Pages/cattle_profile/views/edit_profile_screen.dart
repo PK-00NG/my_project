@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:my_project/Screens/Widgets/background_widget.dart';
+import 'package:flutter/services.dart';
 
 class EditProfileScreen extends StatefulWidget {
   final Map<String, dynamic> profileData;
@@ -123,71 +124,86 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        title: Text("แก้ไขโปรไฟล์", style: TextStyle(color: Colors.white)),
-        backgroundColor: Color(0xFF7B3113),
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-      ),
-      body: BackgroundWidget(
-        child: SafeArea(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  _buildTextField('ชื่อโค'),
-                  SizedBox(height: 16),
-                  _buildTextField('หมายเลขโค'),
-                  SizedBox(height: 16),
-                  _buildDropdownField('เพศ', ['ผู้', 'เมีย']),
-                  SizedBox(height: 16),
-                  _buildDateField(),
-                  SizedBox(height: 16),
-                  _buildDropdownField(
-                      'สายพันธุ์', ['บราห์มัน', 'ชาโรเลส์', 'บีฟมาสเตอร์']),
-                  SizedBox(height: 16),
-                  _buildTextField('สีตัวโค'),
-                  SizedBox(height: 16),
-                  _buildTextField('หมายเลขพ่อพันธุ์'),
-                  SizedBox(height: 16),
-                  _buildTextField('หมายเลขแม่พันธุ์'),
-                  SizedBox(height: 16),
-                  _buildTextField('ชื่อผู้เลี้ยง'),
-                  SizedBox(height: 16),
-                  _buildTextField('ชื่อเจ้าของในปัจจุบัน'),
-                  SizedBox(height: 24),
-                  Center(
-                    child: SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.5,
-                      child: ElevatedButton(
-                        child: const Text('บันทึก', style: _buttonTextStyle),
-                        onPressed: _saveProfile,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xFF7B3113),
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle.light,
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          extendBodyBehindAppBar: true,
+          appBar: AppBar(
+            title: Text("แก้ไขโปรไฟล์", style: TextStyle(color: Colors.white)),
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            flexibleSpace: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Color(0xFF7B3113).withOpacity(0.7),
+                    Color(0xFF7B3113).withOpacity(0.0),
+                  ],
+                ),
+              ),
+            ),
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back, color: Colors.white),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ),
+          body: BackgroundWidget(
+            child: SafeArea(
+              child: SingleChildScrollView(
+                padding: EdgeInsets.fromLTRB(16, 16, 16, 16),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      _buildTextField('ชื่อโค'),
+                      SizedBox(height: 16),
+                      _buildTextField('หมายเลขโค'),
+                      SizedBox(height: 16),
+                      _buildDropdownField('เพศ', ['ผู้', 'เมีย']),
+                      SizedBox(height: 16),
+                      _buildDateField(),
+                      SizedBox(height: 16),
+                      _buildDropdownField(
+                          'สายพันธุ์', ['บราห์มัน', 'ชาโรเลส์', 'บีฟมาสเตอร์']),
+                      SizedBox(height: 16),
+                      _buildTextField('สีตัวโค'),
+                      SizedBox(height: 16),
+                      _buildTextField('หมายเลขพ่อพันธุ์'),
+                      SizedBox(height: 16),
+                      _buildTextField('หมายเลขแม่พันธุ์'),
+                      SizedBox(height: 16),
+                      _buildTextField('ชื่อผู้เลี้ยง'),
+                      SizedBox(height: 16),
+                      _buildTextField('ชื่อเจ้าของในปัจจุบัน'),
+                      SizedBox(height: 24),
+                      Center(
+                        child: SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.5,
+                          child: ElevatedButton(
+                            child:
+                                const Text('บันทึก', style: _buttonTextStyle),
+                            onPressed: _saveProfile,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Color(0xFF7B3113),
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                    ),
-                  )
-                ],
+                      )
+                    ],
+                  ),
+                ),
               ),
             ),
           ),
-        ),
-      ),
-    );
+        ));
   }
 
   Widget _buildTextField(String label) {
