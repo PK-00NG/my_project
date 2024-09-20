@@ -224,7 +224,7 @@ class _CattleProfileScreenState extends State<CattleProfileScreen> {
           // TODO: Implement weight estimation
         },
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.brown,
+          backgroundColor: Color(0xFF7B3113),
           padding: EdgeInsets.symmetric(vertical: 16),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),

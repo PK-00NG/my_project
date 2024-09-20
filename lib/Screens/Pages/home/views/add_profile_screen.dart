@@ -158,7 +158,7 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
                       child: const Text('บันทึก', style: _buttonTextStyle),
                       onPressed: _saveProfile,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.brown,
+                        backgroundColor: Color(0xFF7B3113),
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),

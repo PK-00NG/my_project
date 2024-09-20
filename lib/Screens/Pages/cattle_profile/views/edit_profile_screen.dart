@@ -20,6 +20,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final _formKey = GlobalKey<FormState>();
   late Map<String, TextEditingController> _controllers;
   late DateTime? _selectedDate;
+  final Map<String, FocusNode> _focusNodes = {};
+  final Map<String, ValueNotifier<bool>> _highlightNotifiers = {};
+
+  // Define colors
+  final Color _inactiveColor = const Color(0xFFE8E8E8);
+  final Color _activeColor = Colors.white;
+  final Color _borderColor = Colors.brown;
 
   @override
   void initState() {
@@ -27,6 +34,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     _initializeControllers();
     _selectedDate =
         DateTime.tryParse(widget.profileData['วัน/เดือน/ปีเกิด'] ?? '');
+    _initializeFocusNodesAndNotifiers();
   }
 
   void _initializeControllers() {
@@ -49,9 +57,36 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     };
   }
 
+  void _initializeFocusNodesAndNotifiers() {
+    _controllers.keys.forEach((field) {
+      _focusNodes[field] = FocusNode();
+      _highlightNotifiers[field] = ValueNotifier<bool>(false);
+      _focusNodes[field]!.addListener(() {
+        _updateHighlight(field);
+      });
+      _controllers[field]!.addListener(() {
+        _updateHighlight(field);
+      });
+    });
+  }
+
+  void _updateHighlight(String field) {
+    if (mounted) {
+      setState(() {
+        _highlightNotifiers[field]!.value = _focusNodes[field]!.hasFocus ||
+            _controllers[field]!.text.isNotEmpty;
+      });
+    }
+  }
+
   @override
   void dispose() {
     _controllers.values.forEach((controller) => controller.dispose());
+    _focusNodes.values.forEach((node) {
+      node.removeListener(() {});
+      node.dispose();
+    });
+    _highlightNotifiers.values.forEach((notifier) => notifier.dispose());
     super.dispose();
   }
 
@@ -80,17 +115,23 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     }
   }
 
+  static const TextStyle _buttonTextStyle = TextStyle(
+    color: Colors.white,
+    fontSize: 18,
+    fontWeight: FontWeight.bold,
+  );
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.transparent,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: Text("แก้ไขโปรไฟล์", style: TextStyle(color: Colors.brown)),
-        backgroundColor: Colors.transparent,
+        title: Text("แก้ไขโปรไฟล์", style: TextStyle(color: Colors.white)),
+        backgroundColor: Color(0xFF7B3113),
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.brown),
+          icon: Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
@@ -124,14 +165,22 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   SizedBox(height: 16),
                   _buildTextField('ชื่อเจ้าของในปัจจุบัน'),
                   SizedBox(height: 24),
-                  ElevatedButton(
-                    child: Text('บันทึก', style: TextStyle(fontSize: 18)),
-                    onPressed: _saveProfile,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.brown,
-                      padding: EdgeInsets.symmetric(vertical: 16),
+                  Center(
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.5,
+                      child: ElevatedButton(
+                        child: const Text('บันทึก', style: _buttonTextStyle),
+                        onPressed: _saveProfile,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color(0xFF7B3113),
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
+                  )
                 ],
               ),
             ),
@@ -142,39 +191,98 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   Widget _buildTextField(String label) {
-    return TextFormField(
-      controller: _controllers[label],
-      decoration: InputDecoration(labelText: label),
-      validator: (value) => value!.isEmpty ? 'กรุณากรอก$label' : null,
+    return ValueListenableBuilder<bool>(
+      valueListenable: _highlightNotifiers[label]!,
+      builder: (context, shouldHighlight, child) {
+        return TextFormField(
+          controller: _controllers[label],
+          focusNode: _focusNodes[label],
+          decoration: InputDecoration(
+            labelText: label,
+            filled: true,
+            fillColor: shouldHighlight ? _activeColor : _inactiveColor,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: shouldHighlight
+                  ? BorderSide(color: _borderColor, width: 1)
+                  : BorderSide.none,
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: BorderSide(color: _borderColor, width: 1),
+            ),
+          ),
+          validator: (value) => value!.isEmpty ? 'กรุณากรอก$label' : null,
+        );
+      },
     );
   }
 
   Widget _buildDropdownField(String label, List<String> items) {
-    return DropdownButtonFormField<String>(
-      value: _controllers[label]!.text,
-      decoration: InputDecoration(labelText: label),
-      items: items.map((String value) {
-        return DropdownMenuItem<String>(value: value, child: Text(value));
-      }).toList(),
-      onChanged: (value) {
-        setState(() {
-          _controllers[label]!.text = value ?? '';
-        });
+    return ValueListenableBuilder<bool>(
+      valueListenable: _highlightNotifiers[label]!,
+      builder: (context, shouldHighlight, _) {
+        return DropdownButtonFormField<String>(
+          value: _controllers[label]!.text,
+          focusNode: _focusNodes[label],
+          decoration: InputDecoration(
+            labelText: label,
+            filled: true,
+            fillColor: shouldHighlight ? _activeColor : _inactiveColor,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: shouldHighlight
+                  ? BorderSide(color: _borderColor, width: 1)
+                  : BorderSide.none,
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: BorderSide(color: _borderColor, width: 1),
+            ),
+          ),
+          items: items.map((String value) {
+            return DropdownMenuItem<String>(value: value, child: Text(value));
+          }).toList(),
+          onChanged: (value) {
+            setState(() {
+              _controllers[label]!.text = value ?? '';
+            });
+          },
+          validator: (value) => value == null ? 'กรุณาเลือก$label' : null,
+        );
       },
-      validator: (value) => value == null ? 'กรุณาเลือก$label' : null,
     );
   }
 
   Widget _buildDateField() {
-    return TextFormField(
-      controller: _controllers['วัน/เดือน/ปีเกิด'],
-      decoration: InputDecoration(
-        labelText: 'วัน/เดือน/ปีเกิด',
-        suffixIcon: Icon(Icons.calendar_today),
-      ),
-      readOnly: true,
-      onTap: () => _selectDate(context),
-      validator: (value) => value!.isEmpty ? 'กรุณาเลือกวันเดือนปีเกิด' : null,
+    return ValueListenableBuilder<bool>(
+      valueListenable: _highlightNotifiers['วัน/เดือน/ปีเกิด']!,
+      builder: (context, shouldHighlight, child) {
+        return TextFormField(
+          controller: _controllers['วัน/เดือน/ปีเกิด'],
+          focusNode: _focusNodes['วัน/เดือน/ปีเกิด'],
+          decoration: InputDecoration(
+            labelText: 'วัน/เดือน/ปีเกิด',
+            filled: true,
+            fillColor: shouldHighlight ? _activeColor : _inactiveColor,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: shouldHighlight
+                  ? BorderSide(color: _borderColor, width: 1)
+                  : BorderSide.none,
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: BorderSide(color: _borderColor, width: 1),
+            ),
+            suffixIcon: Icon(Icons.calendar_today),
+          ),
+          readOnly: true,
+          onTap: () => _selectDate(context),
+          validator: (value) =>
+              value!.isEmpty ? 'กรุณาเลือกวันเดือนปีเกิด' : null,
+        );
+      },
     );
   }
 }
