@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:my_project/Screens/Pages/auth/blocs/sign_up/sign_up_bloc.dart';
+import 'package:my_project/Screens/Pages/login_page/blocs/sign_up/sign_up_bloc.dart';
 import 'package:my_project/components/my_text_field.dart';
 import 'package:user_repository/user_repository.dart';
 

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:my_project/Screens/Pages/cattle_profile/views/edit_profile_screen.dart';
+import 'package:my_project/Screens/Pages/cattle_profile_page/views/edit_profile_screen.dart';
 import 'package:my_project/Screens/Widgets/background_widget.dart';
 
 class CattleProfileScreen extends StatefulWidget {

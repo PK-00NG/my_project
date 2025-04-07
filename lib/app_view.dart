@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:my_project/Screens/Pages/home/views/main_screen.dart';
+import 'package:my_project/Screens/Pages/home_page/views/main_screen.dart';
 
 import 'package:my_project/blocs/authentication/authentication_bloc.dart';
 
-import 'Screens/Pages/auth/blocs/sign_in/sign_in_bloc.dart';
-import 'Screens/Pages/auth/views/welcome_screen.dart';
+import 'Screens/Pages/login_page/blocs/sign_in/sign_in_bloc.dart';
+import 'Screens/Pages/login_page/views/welcome_screen.dart';
 
 class MyAppView extends StatelessWidget {
   const MyAppView({super.key});

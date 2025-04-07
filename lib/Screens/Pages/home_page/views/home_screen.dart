@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:my_project/Screens/Pages/cattle_profile/views/cattle_profile_screen.dart';
+import 'package:my_project/Screens/Pages/cattle_profile_page/views/cattle_profile_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   final List<Map<String, dynamic>> profiles;

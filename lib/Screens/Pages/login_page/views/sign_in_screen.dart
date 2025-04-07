@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:my_project/Screens/Pages/auth/blocs/sign_in/sign_in_bloc.dart';
-import 'package:my_project/Screens/Pages/auth/views/forget_password_screen.dart';
+import 'package:my_project/Screens/Pages/login_page/blocs/sign_in/sign_in_bloc.dart';
+import 'package:my_project/Screens/Pages/login_page/views/forget_password_screen.dart';
 import 'package:my_project/components/my_text_field.dart';
 
 class SignInScreen extends StatefulWidget {
